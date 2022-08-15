@@ -13,6 +13,17 @@ const drawBorders = (ctx, arr) => {
     })
 }
 
+const drawNumbers = (ctx, arr) => {
+    arr.forEach(elem => {
+        ctx.beginPath();
+        ctx.lineWidth = elem.lineWidth ? elem.lineWidth : "20";
+        ctx.strokeStyle = elem.strokeStyle ? elem.strokeStyle : "blue";
+        ctx.moveTo(...elem.moveTo)
+        ctx.lineTo(...elem.lineTo)
+        ctx.stroke()
+    })
+}
+
 const player = {
     x: 50,
     y: 100,
@@ -22,9 +33,14 @@ const player = {
     speed: 11
 }
 
-let outerWalls = [[0, 0, 10, canvas.height], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height],]
+let outerWalls = [[0, 0, 10, canvas.height], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height]]
 let portal = [[0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10]]
 let innerWalls = [[395, 0, 10, 100], [90, 90, 220, 10], [490, 90, 220, 10]]
+let number1 = { moveTo: [95, 200], lineTo: [95, 500] }
+let number9 = [{ moveTo: [310, 500], lineTo: [310, 200] }, { moveTo: [310, 210], lineTo: [190, 210] }, { moveTo: [190, 200], lineTo: [190, 350] }, { moveTo: [190, 340], lineTo: [310, 340] }]
+let number8 = [{ moveTo: [400, 210], lineTo: [520, 210] }, { moveTo: [520, 200], lineTo: [520, 500] }, { moveTo: [520, 490], lineTo: [400, 490] }, { moveTo: [400, 500], lineTo: [400, 200] }, { moveTo: [400, 340], lineTo: [520, 340] }]
+let number0 = [{ moveTo: [715, 210], lineTo: [595, 210] }, { moveTo: [715, 200], lineTo: [715, 500] }, { moveTo: [715, 490], lineTo: [595, 490] }, { moveTo: [600, 500], lineTo: [600, 400] }, { moveTo: [600, 200], lineTo: [600, 300] }, { moveTo: [600, 300], lineTo: [600, 400], strokeStyle: 'white', lineWidth: 10 }]
+
 
 document.addEventListener('keydown', function (event) {
     console.log(event)
@@ -110,7 +126,10 @@ const render = () => {
 
     drawBorders(ctx, [...outerWalls, ...portal, ...innerWalls])
 
-
+    drawNumbers(ctx, [number1])
+    drawNumbers(ctx, number9)
+    drawNumbers(ctx, number8)
+    drawNumbers(ctx, number0)
 
     let pacman = new Image()
     pacman.src = './assets/pacman.png'
