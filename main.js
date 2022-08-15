@@ -1,5 +1,6 @@
 const canvas = document.querySelector('#myCanvas')
-//const { drawBorders } = require('./helpers')
+const ctx = canvas.getContext('2d')
+
 let keyclick = {}
 
 const drawBorders = (ctx, arr) => {
@@ -12,9 +13,7 @@ const drawBorders = (ctx, arr) => {
     })
 }
 
-const ctx = canvas.getContext('2d')
-
-let player = {
+const player = {
     x: 50,
     y: 100,
     pacMouth: 320,
@@ -24,6 +23,7 @@ let player = {
 }
 
 document.addEventListener('keydown', function (event) {
+    console.log(event)
     keyclick[event.code] = true;
     move(keyclick);
 }, false);
@@ -32,7 +32,8 @@ document.addEventListener('keyup', function (event) {
     delete keyclick[event.code];
 }, false);
 
-function move(keyclick) {
+const move = (keyclick) => {
+    // Moving
     if (keyclick.ArrowLeft) {
         player.x -= player.speed;
         player.pacDir = 64;
@@ -56,7 +57,7 @@ function move(keyclick) {
     // }
 
 
-
+    // Border collision
     if (player.x >= (canvas.width - 58)) {
         player.x = canvas.width - 58;
     }
@@ -77,20 +78,20 @@ function move(keyclick) {
         }
     }
 
-    if ((player.x > 350 && player.x < 360) && player.y < 100 && keyclick.ArrowRight) player.x -= player.speed
-    if ((player.x > 400 && player.x < 410) && player.y < 100 && keyclick.ArrowLeft) player.x += player.speed
-    if ((player.x > 350 && player.x < 398) && (player.y >= 89 && player.y < 115) && keyclick.ArrowUp) {
-        player.y = 110
-        console.log('da')
-    }
-
-
     if (player.x < 10) {
         player.x = 10;
     }
     if (player.y < 10) {
         player.y = 10;
     }
+
+    // Maze collision
+    if ((player.x > 345 && player.x < 360) && player.y < 100 && keyclick.ArrowRight) player.x -= player.speed
+    if ((player.x > 400 && player.x < 410) && player.y < 100 && keyclick.ArrowLeft) player.x += player.speed
+    if ((player.x > 350 && player.x < 398) && (player.y >= 89 && player.y < 115) && keyclick.ArrowUp) player.y = 110
+
+
+    // Open/closed mouth
     if (player.pacMouth == 320) {
         player.pacMouth = 352;
     } else { player.pacMouth = 320; }
@@ -105,7 +106,7 @@ const render = () => {
 
     drawBorders(ctx, [
         [0, 0, 10, canvas.height], [395, 0, 10, 100], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height],
-        [0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10]
+        [0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10], [90, 90, 220, 10], [490, 90, 220, 10]
     ])
 
 
