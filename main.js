@@ -22,6 +22,10 @@ const player = {
     speed: 11
 }
 
+let outerWalls = [[0, 0, 10, canvas.height], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height],]
+let portal = [[0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10]]
+let innerWalls = [[395, 0, 10, 100], [90, 90, 220, 10], [490, 90, 220, 10]]
+
 document.addEventListener('keydown', function (event) {
     console.log(event)
     keyclick[event.code] = true;
@@ -104,10 +108,7 @@ const render = () => {
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    drawBorders(ctx, [
-        [0, 0, 10, canvas.height], [395, 0, 10, 100], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height],
-        [0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10], [90, 90, 220, 10], [490, 90, 220, 10]
-    ])
+    drawBorders(ctx, [...outerWalls, ...portal, ...innerWalls])
 
 
 
