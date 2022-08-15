@@ -43,7 +43,6 @@ let number0 = [{ moveTo: [715, 210], lineTo: [595, 210] }, { moveTo: [715, 200],
 
 
 document.addEventListener('keydown', function (event) {
-    console.log(event)
     keyclick[event.code] = true;
     move(keyclick);
 }, false);
@@ -63,7 +62,6 @@ const move = (keyclick) => {
         player.pacDir = 96;
     }
     if (keyclick.ArrowRight) {
-        console.log('lau')
         player.x += player.speed;
         player.pacDir = 0;
     }
@@ -109,6 +107,15 @@ const move = (keyclick) => {
     if ((player.x > 345 && player.x < 360) && player.y < 100 && keyclick.ArrowRight) player.x -= player.speed
     if ((player.x > 400 && player.x < 410) && player.y < 100 && keyclick.ArrowLeft) player.x += player.speed
     if ((player.x > 350 && player.x < 398) && (player.y >= 89 && player.y < 115) && keyclick.ArrowUp) player.y = 110
+    if ((player.x > 35 && player.x < 105) && (player.y > 155 && player.y < 495)) {
+        if (keyclick.ArrowRight) player.x -= player.speed
+        if (keyclick.ArrowLeft) player.x += player.speed
+    }
+    if ((player.x >= 50 && player.x < 95)) {
+        if (player.y > 50 && player.y < 100) player.x -= player.speed
+        if (player.y > 145 && player.y < 160) player.y -= player.speed
+        if (player.y > 480 && player.y < 500) player.y = 495
+    }
 
 
     // Open/closed mouth
