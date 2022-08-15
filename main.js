@@ -114,8 +114,13 @@ const move = (keyclick) => {
     if ((player.x >= 50 && player.x < 95)) {
         if (player.y > 50 && player.y < 100) player.x -= player.speed
         if (player.y > 145 && player.y < 160) player.y -= player.speed
-        if (player.y > 480 && player.y < 500) player.y = 495
+        if ((player.y > 480 && player.y < 520) && keyclick.ArrowUp) player.y = 500
     }
+
+    if (player.x >= 300 && player.x < 325) {
+        if ((player.y > 55 && player.y < 100) || (player.y > 165 && player.y < 490)) player.x += player.speed
+    }
+
 
 
     // Open/closed mouth
