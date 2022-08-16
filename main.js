@@ -25,8 +25,8 @@ const drawNumbers = (ctx, arr) => {
 }
 
 const player = {
-    x: 50,
-    y: 100,
+    x: 30,
+    y: 30,
     pacMouth: 320,
     pacDir: 0,
     pSize: 32,
@@ -106,7 +106,7 @@ const move = (keyclick) => {
     // Maze collision
     if ((player.x > 345 && player.x < 360) && player.y < 100 && keyclick.ArrowRight) player.x -= player.speed
     if ((player.x > 400 && player.x < 410) && player.y < 100 && keyclick.ArrowLeft) player.x += player.speed
-    if ((player.x > 350 && player.x < 398) && (player.y >= 89 && player.y < 115) && keyclick.ArrowUp) player.y = 110
+    if ((player.x > 350 && player.x < 398) && (player.y >= 89 && player.y < 115) && keyclick.ArrowUp) player.y += player.speed
     if ((player.x > 35 && player.x < 105) && (player.y > 155 && player.y < 495)) {
         if (keyclick.ArrowRight) player.x -= player.speed
         if (keyclick.ArrowLeft) player.x += player.speed
@@ -114,12 +114,41 @@ const move = (keyclick) => {
     if ((player.x >= 50 && player.x < 95)) {
         if (player.y > 50 && player.y < 100) player.x -= player.speed
         if (player.y > 145 && player.y < 160) player.y -= player.speed
-        if ((player.y > 480 && player.y < 520) && keyclick.ArrowUp) player.y = 500
+        if ((player.y > 480 && player.y < 520) && keyclick.ArrowUp) player.y += player.speed
     }
 
     if (player.x >= 300 && player.x < 325) {
         if ((player.y > 55 && player.y < 100) || (player.y > 165 && player.y < 490)) player.x += player.speed
     }
+    if ((player.x > 130 && player.x < 145) && (player.y > 155 && player.y < 340)) player.x -= player.speed
+    if (player.x > 155 && player.x < 310) {
+        if (player.y > 145 && player.y < 160) player.y -= player.speed
+        if (player.y > 340 && player.y < 355) player.y = player.y += player.speed
+    }
+    if ((player.x > 245 && player.x < 270) && (player.y > 350 && player.y < 480)) player.x -= player.speed
+    if ((player.x > 260 && player.x < 315) && (player.y > 470 && player.y < 500)) player.y += player.speed
+    if ((player.y > 35 && player.y < 55) || (player.y > 90 && player.y < 110)) {
+        if ((player.x > 50 && player.x < 300) || (player.x >= 450 && player.x < 705)) {
+            if (keyclick.ArrowUp) player.y += player.speed
+            if (keyclick.ArrowDown) player.y -= player.speed
+            if (keyclick.ArrowLeft) player.x -= player.speed
+        }
+    }
+    if ((player.y > 55 && player.y < 100) && (player.x > 435 && player.x < 705)) {
+        if (keyclick.ArrowRight) player.x -= player.speed
+        if (keyclick.ArrowLeft) player.x += player.speed
+    }
+
+    if (player.y > 170 && player.y < 480) {
+        if ((player.x >= 710 && player.x < 725) || (player.x >= 520 && player.x < 540)) player.x += player.speed
+        if ((player.x >= 545 && player.x < 560) || (player.x > 345 && player.x < 360)) player.x -= player.speed
+    }
+    if ((player.x > 355 && player.x < 525) || (player.x > 550 && player.x < 720)) {
+        if (player.y > 475 && player.y < 500) player.y += player.speed
+        if (player.y > 160 && player.y < 170) player.y -= player.speed
+    }
+
+
 
 
 
