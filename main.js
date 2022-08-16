@@ -24,6 +24,17 @@ const drawNumbers = (ctx, arr) => {
     })
 }
 
+const drawPellets = (ctx, pill) => {
+    ctx.fillStyle = "white";
+    let radius = pill.super ? 24 : 12
+    pill.quantity.map(elem => {
+        ctx.beginPath();
+        ctx.arc(x + 50, pill.y, radius, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.fill();
+    })
+}
+
 const player = {
     x: 30,
     y: 30,
@@ -32,6 +43,8 @@ const player = {
     pSize: 32,
     speed: 11
 }
+
+const pills = [{ x: 20, y: 130, quantity: 10 }]
 
 let outerWalls = [[0, 0, 10, canvas.height], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height]]
 let portal = [[0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10]]
@@ -147,9 +160,6 @@ const move = (keyclick) => {
         if (player.y > 475 && player.y < 500) player.y += player.speed
         if (player.y > 160 && player.y < 170) player.y -= player.speed
     }
-
-
-
 
 
     // Open/closed mouth
