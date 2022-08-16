@@ -1,7 +1,16 @@
 const canvas = document.querySelector('#myCanvas')
 const ctx = canvas.getContext('2d')
 
-let keyclick = {}
+const createPillGrid = (pillsObj) => {
+    pillsObj.map(pillObj => {
+        for (let i = 0; i < pillObj.quantity; i++) {
+            let superPill = pillObj.super ? true : false
+            let obj = pillObj?.horizontal ? { x: pillObj.x + 50 * i, y: pillObj.y, superPill } : { x: pillObj.x, y: pillObj.y + 50 * i, superPill }
+            pills.push(obj)
+        }
+    })
+
+}
 
 const drawBorders = (ctx, arr) => {
     arr.forEach(elem => {
@@ -24,17 +33,20 @@ const drawNumbers = (ctx, arr) => {
     })
 }
 
-const drawPellets = (ctx, pill) => {
-    ctx.fillStyle = "white";
-    let radius = pill.super ? 24 : 12
-    pill.quantity.map(elem => {
+const drawPills = (ctx, pills) => {
+
+    for (let i = 0; i < pills.length; i++) {
+        let radius = pills[i].superPill ? 20 : 8
+        ctx.fillStyle = "white";
         ctx.beginPath();
-        ctx.arc(x + 50, pill.y, radius, 0, Math.PI * 2, true);
+        ctx.arc(pills[i].x, pills[i].y, radius, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.fill();
-    })
+    }
 }
 
+let keyclick = {}
+const pills = []
 const player = {
     x: 30,
     y: 30,
@@ -44,7 +56,10 @@ const player = {
     speed: 11
 }
 
-const pills = [{ x: 20, y: 130, quantity: 10 }]
+let pillsObj = [{ x: 50, y: 150, quantity: 15, horizontal: true }, { x: 50, y: 540, quantity: 15, horizontal: true }, { x: 50, y: 200, quantity: 7 }, { x: 750, y: 200, quantity: 7 }]
+createPillGrid(pillsObj)
+
+
 
 let outerWalls = [[0, 0, 10, canvas.height], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height]]
 let portal = [[0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10]]
@@ -161,6 +176,14 @@ const move = (keyclick) => {
         if (player.y > 160 && player.y < 170) player.y -= player.speed
     }
 
+    console.log(pills)
+    // Pill detection
+    pills.map(pill => {
+        if (player.x <= pill.x && pill.x <= (player.x + 32) && player.y <= pill.y && pill.y <= (player.y + 32)) {
+            pill.x = -10
+            pill.y = -10
+        }
+    })
 
     // Open/closed mouth
     if (player.pacMouth == 320) {
@@ -175,12 +198,15 @@ const render = () => {
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+
     drawBorders(ctx, [...outerWalls, ...portal, ...innerWalls])
 
     drawNumbers(ctx, [number1])
     drawNumbers(ctx, number9)
     drawNumbers(ctx, number8)
     drawNumbers(ctx, number0)
+
+    drawPills(ctx, pills)
 
     let pacman = new Image()
     pacman.src = './assets/pacman.png'
@@ -192,5 +218,7 @@ const playGame = () => {
     render()
     requestAnimationFrame(playGame)
 }
+
+
 
 playGame()
