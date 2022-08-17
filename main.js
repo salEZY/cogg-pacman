@@ -1,17 +1,36 @@
 const canvas = document.querySelector('#myCanvas')
 const ctx = canvas.getContext('2d')
+const scoreSpan = document.querySelector('.score')
+const livesSpan = document.querySelector('.lives')
+const levelSpan = document.querySelector('.level')
+let score = 0
+let scoreToBeat = 0
+let lives = 3
+let level = 1
+let keyclick = {}
+let pills = []
+const player = {
+    x: 30,
+    y: 30,
+    pacMouth: 320,
+    pacDir: 0,
+    pSize: 32,
+    speed: 10
+}
+
 
 const createPillGrid = (pillsObj) => {
     pillsObj.map(pillObj => {
         for (let i = 0; i < pillObj.quantity; i++) {
-            let superPill = pillObj.super ? true : false
+            scoreToBeat += pillObj.superPill ? 100 : 10
+            let superPill = pillObj.superPill ? true : false
             let obj = pillObj?.horizontal ? { x: pillObj.x + 50 * i, y: pillObj.y, superPill } : { x: pillObj.x, y: pillObj.y + 50 * i, superPill }
             pills.push(obj)
         }
     })
-
 }
 
+// Drawing functions
 const drawBorders = (ctx, arr) => {
     arr.forEach(elem => {
         ctx.beginPath();
@@ -34,9 +53,8 @@ const drawNumbers = (ctx, arr) => {
 }
 
 const drawPills = (ctx, pills) => {
-
     for (let i = 0; i < pills.length; i++) {
-        let radius = pills[i].superPill ? 20 : 8
+        let radius = pills[i].superPill ? 16 : 8
         ctx.fillStyle = "white";
         ctx.beginPath();
         ctx.arc(pills[i].x, pills[i].y, radius, 0, Math.PI * 2, true);
@@ -45,37 +63,21 @@ const drawPills = (ctx, pills) => {
     }
 }
 
-const scoreSpan = document.querySelector('.score')
-const livesSpan = document.querySelector('.lives')
-const levelSpan = document.querySelector('.level')
-let score = 0
-let lives = 3
-let level = 1
-let keyclick = {}
-const pills = []
-const player = {
-    x: 30,
-    y: 30,
-    pacMouth: 320,
-    pacDir: 0,
-    pSize: 32,
-    speed: 11
-}
 
-
-let pillsObj = [{ x: 50, y: 150, quantity: 15, horizontal: true }, { x: 50, y: 540, quantity: 15, horizontal: true }, { x: 50, y: 200, quantity: 7 }, { x: 750, y: 200, quantity: 7 }]
-createPillGrid(pillsObj)
-
-
+// Drawing variables
 let outerWalls = [[0, 0, 10, canvas.height], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height]]
 let portal = [[0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10]]
 let innerWalls = [[395, 0, 10, 100], [90, 90, 220, 10], [490, 90, 220, 10]]
+let superPills = [{ x: 150, y: 50, superPill: true, quantity: 1 }, { x: 270, y: 480, superPill: true, quantity: 1 }, { x: 450, y: 50, superPill: true, quantity: 1 }, { x: 560, y: 270, superPill: true, quantity: 1 }]
+let smallPills = [{ x: 50, y: 150, quantity: 15, horizontal: true }, { x: 50, y: 540, quantity: 15, horizontal: true }, { x: 50, y: 200, quantity: 7 }, { x: 750, y: 200, quantity: 7 },]
 let number1 = { moveTo: [95, 200], lineTo: [95, 500] }
 let number9 = [{ moveTo: [310, 500], lineTo: [310, 200] }, { moveTo: [310, 210], lineTo: [190, 210] }, { moveTo: [190, 200], lineTo: [190, 350] }, { moveTo: [190, 340], lineTo: [310, 340] }]
 let number8 = [{ moveTo: [400, 210], lineTo: [520, 210] }, { moveTo: [520, 200], lineTo: [520, 500] }, { moveTo: [520, 490], lineTo: [400, 490] }, { moveTo: [400, 500], lineTo: [400, 200] }, { moveTo: [400, 340], lineTo: [520, 340] }]
 let number0 = [{ moveTo: [715, 210], lineTo: [595, 210] }, { moveTo: [715, 200], lineTo: [715, 500] }, { moveTo: [715, 490], lineTo: [595, 490] }, { moveTo: [600, 500], lineTo: [600, 400] }, { moveTo: [600, 200], lineTo: [600, 300] }, { moveTo: [600, 300], lineTo: [600, 400], strokeStyle: 'white', lineWidth: 10 }]
+let pillsObj = [...smallPills, ...superPills]
+createPillGrid(pillsObj)
 
-
+// Moving listeners
 document.addEventListener('keydown', function (event) {
     keyclick[event.code] = true;
     move(keyclick);
@@ -103,10 +105,9 @@ const move = (keyclick) => {
         player.y += player.speed;
         player.pacDir = 32;
     }
-
-    // if (13 in keyclick) {
-    //     pauseGame();
-    // }
+    if (keyclick.Space) {
+        player.speed = 0
+    }
 
 
     // Border collision
@@ -182,13 +183,13 @@ const move = (keyclick) => {
         if (player.y > 160 && player.y < 170) player.y -= player.speed
     }
 
-    console.log(pills)
+
     // Pill detection
     pills.map(pill => {
         if (player.x <= pill.x && pill.x <= (player.x + 32) && player.y <= pill.y && pill.y <= (player.y + 32)) {
-            pill.x = -10
-            pill.y = -10
-            score++
+            pill.x = -20
+            pill.y = -20
+            pill.superPill ? score += 100 : score += 10
         }
     })
 
@@ -218,17 +219,34 @@ const render = () => {
 
     drawPills(ctx, pills)
 
-    let pacman = new Image()
-    pacman.src = './assets/pacman.png'
+    // Next level
+    if (score === scoreToBeat) {
+        pills = []
+        level += 1
+        levelSpan.innerHTML = level
+        score = 0
+        scoreToBeat = 0
+        player.x = 30
+        player.y = 30
+        createPillGrid(pillsObj)
+        drawPills(ctx, pills)
+    }
 
-    ctx.drawImage(pacman, player.pacMouth, player.pacDir, 32, 32, player.x, player.y, 50, 50);
+    let characters = new Image()
+    characters.src = './assets/pacman.png'
+
+    // Draw Pacman
+    ctx.drawImage(characters, player.pacMouth, player.pacDir, 32, 32, player.x, player.y, 50, 50);
+
+
+    // Draw Eyes
+    ctx.drawImage(characters, 380, 65, 32, 32, 627, 250, 50, 50)
 }
 
 const playGame = () => {
     render()
     requestAnimationFrame(playGame)
 }
-
 
 
 playGame()
