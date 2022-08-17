@@ -1,0 +1,28 @@
+* {
+    box-sizing: border-box;
+    background-color: black;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    color: #FFFF00;
+}
+
+.info {
+    width: 800px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    color: #FFFF00;
+}
+
+.info p {
+    font-size: 20px;
+    margin: 20px 40px 0 0;
+}

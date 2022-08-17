@@ -45,6 +45,12 @@ const drawPills = (ctx, pills) => {
     }
 }
 
+const scoreSpan = document.querySelector('.score')
+const livesSpan = document.querySelector('.lives')
+const levelSpan = document.querySelector('.level')
+let score = 0
+let lives = 3
+let level = 1
 let keyclick = {}
 const pills = []
 const player = {
@@ -56,9 +62,9 @@ const player = {
     speed: 11
 }
 
+
 let pillsObj = [{ x: 50, y: 150, quantity: 15, horizontal: true }, { x: 50, y: 540, quantity: 15, horizontal: true }, { x: 50, y: 200, quantity: 7 }, { x: 750, y: 200, quantity: 7 }]
 createPillGrid(pillsObj)
-
 
 
 let outerWalls = [[0, 0, 10, canvas.height], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height]]
@@ -182,6 +188,7 @@ const move = (keyclick) => {
         if (player.x <= pill.x && pill.x <= (player.x + 32) && player.y <= pill.y && pill.y <= (player.y + 32)) {
             pill.x = -10
             pill.y = -10
+            score++
         }
     })
 
@@ -195,6 +202,9 @@ const move = (keyclick) => {
 }
 
 const render = () => {
+    scoreSpan.innerHTML = score
+    livesSpan.innerHTML = lives
+    levelSpan.innerHTML = level
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
