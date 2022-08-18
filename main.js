@@ -68,12 +68,12 @@ const drawPills = (ctx, pills) => {
 let outerWalls = [[0, 0, 10, canvas.height], [0, 0, canvas.width, 10], [canvas.width - 10, 0, 10, canvas.height]]
 let portal = [[0, canvas.height - 10, 150, 10], [250, canvas.height - 10, 300, 10], [650, canvas.height - 10, 150, 10]]
 let innerWalls = [[395, 0, 10, 100], [90, 90, 220, 10], [490, 90, 220, 10]]
-let superPills = [{ x: 150, y: 50, superPill: true, quantity: 1 }, { x: 270, y: 480, superPill: true, quantity: 1 }, { x: 450, y: 50, superPill: true, quantity: 1 }, { x: 560, y: 270, superPill: true, quantity: 1 }]
-let smallPills = [{ x: 50, y: 150, quantity: 15, horizontal: true }, { x: 50, y: 540, quantity: 15, horizontal: true }, { x: 50, y: 200, quantity: 7 }, { x: 750, y: 200, quantity: 7 },]
 let number1 = { moveTo: [95, 200], lineTo: [95, 500] }
 let number9 = [{ moveTo: [310, 500], lineTo: [310, 200] }, { moveTo: [310, 210], lineTo: [190, 210] }, { moveTo: [190, 200], lineTo: [190, 350] }, { moveTo: [190, 340], lineTo: [310, 340] }]
 let number8 = [{ moveTo: [400, 210], lineTo: [520, 210] }, { moveTo: [520, 200], lineTo: [520, 500] }, { moveTo: [520, 490], lineTo: [400, 490] }, { moveTo: [400, 500], lineTo: [400, 200] }, { moveTo: [400, 340], lineTo: [520, 340] }]
 let number0 = [{ moveTo: [715, 210], lineTo: [595, 210] }, { moveTo: [715, 200], lineTo: [715, 500] }, { moveTo: [715, 490], lineTo: [595, 490] }, { moveTo: [600, 500], lineTo: [600, 400] }, { moveTo: [600, 200], lineTo: [600, 300] }, { moveTo: [600, 300], lineTo: [600, 400], strokeStyle: 'white', lineWidth: 10 }]
+let superPills = [{ x: 150, y: 50, superPill: true, quantity: 1 }, { x: 270, y: 480, superPill: true, quantity: 1 }, { x: 450, y: 50, superPill: true, quantity: 1 }, { x: 560, y: 270, superPill: true, quantity: 1 }]
+let smallPills = [{ x: 50, y: 150, quantity: 15, horizontal: true }, { x: 50, y: 540, quantity: 15, horizontal: true }, { x: 50, y: 200, quantity: 7 }, { x: 150, y: 200, quantity: 7 }, { x: 750, y: 200, quantity: 7 },]
 let pillsObj = [...smallPills, ...superPills]
 createPillGrid(pillsObj)
 
