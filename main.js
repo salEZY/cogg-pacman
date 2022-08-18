@@ -9,6 +9,7 @@ let lives = 3
 let level = 1
 let keyclick = {}
 let pills = []
+let ghosts = []
 const player = {
     x: 30,
     y: 30,
@@ -18,6 +19,16 @@ const player = {
     speed: 10
 }
 
+// Ghost array
+const createGhostObjs = (ctx, characters) => {
+    for (let i = 0; i < level + 1; i++) {
+        let ghostY = 290 + (80 * i)
+        let ghostCropX = 0 + (65 * i)
+        ghosts.push({ x: 540, y: ghostY, speed: 8, eatable: false, ghostCropX, ghostCropY: 0, sWidth: 32, sHeight: 32, dWidth: 45, dHeight: 45 })
+
+    }
+}
+createGhostObjs()
 
 const createPillGrid = (pillsObj) => {
     pillsObj.map(pillObj => {
@@ -86,7 +97,7 @@ document.addEventListener('keydown', function (event) {
 document.addEventListener('keyup', function (event) {
     delete keyclick[event.code];
 }, false);
-
+console.log(ghosts)
 const move = (keyclick) => {
     // Moving
     if (keyclick.ArrowLeft) {
@@ -115,14 +126,14 @@ const move = (keyclick) => {
         player.x = canvas.width - 58;
     }
     console.log(player.x, player.y)
-
+    console.log(ghosts)
     if (player.y >= (canvas.height - 58)) {
         // PORTAL
         player.y += player.speed;
         if ((player.x > 165 && player.x < 210) || (player.x > 510 && player.x < 610)) {
             if (player.y > canvas.height) {
                 player.x = player.x < 210 ? 580 : 180
-                player.y = canvas.height - 48
+                player.y = canvas.height - 50
                 player.pacDir = 96
             }
         }
@@ -222,6 +233,7 @@ const render = () => {
     // Next level
     if (score === scoreToBeat) {
         pills = []
+        ghosts = []
         level += 1
         levelSpan.innerHTML = level
         score = 0
@@ -230,6 +242,7 @@ const render = () => {
         player.y = 30
         createPillGrid(pillsObj)
         drawPills(ctx, pills)
+        createGhostObjs()
     }
 
     let characters = new Image()
@@ -238,6 +251,10 @@ const render = () => {
     // Draw Pacman
     ctx.drawImage(characters, player.pacMouth, player.pacDir, 32, 32, player.x, player.y, 50, 50);
 
+    // Draw Ghosts
+    ghosts.map(ghost => {
+        ctx.drawImage(characters, ghost.ghostCropX, ghost.ghostCropY, ghost.sWidth, ghost.sHeight, ghost.x, ghost.y, ghost.dWidth, ghost.dHeight)
+    })
 
     // Draw Eyes
     ctx.drawImage(characters, 380, 65, 32, 32, 627, 250, 50, 50)
