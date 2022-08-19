@@ -49,5 +49,12 @@ h1 i {
 
 #spacebar {
     font-size: 35px !important;
+}
 
+.notification {
+    width: 800px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    font-size: 30px;
 }

@@ -3,6 +3,9 @@ const ctx = canvas.getContext('2d')
 const scoreSpan = document.querySelector('.score')
 const livesSpan = document.querySelector('.lives')
 const levelSpan = document.querySelector('.level')
+const notification = document.querySelector('.notification')
+const info = document.querySelector('.info')
+let characters
 let score = 0
 let scoreToBeat = 0
 let lives = 3
@@ -22,7 +25,18 @@ const player = {
     speed: 10
 }
 
+const notificationHandler = (ctx, elem, message, color) => {
+    ctx.fillStyle = 'black'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    elem.style.color = color
+    elem.innerHTML = message
+}
 
+const ghostHandler = (ctx, ghost, characters) => {
+    ctx.drawImage(characters, ghost.ghostCropX, ghost.ghostCropY, ghost.sWidth, ghost.sHeight, ghost.x, ghost.y, ghost.dWidth, ghost.dHeight)
+    ghostMove(ghost)
+    collisionHandler(ghost)
+}
 
 const collisionHandler = (player) => {
     // Border collision
@@ -110,7 +124,7 @@ const ghostMove = (ghost) => {
 }
 
 // Ghost array
-const createGhostObjs = (ctx, characters) => {
+const createGhostObjs = (ctx) => {
     for (let i = 0; i < level + 1; i++) {
         let ghostY = 290 + (80 * i)
         let ghostCropX = 0 + (65 * i)
@@ -264,7 +278,7 @@ const render = () => {
 
 
 
-    let characters = new Image()
+    characters = new Image()
     characters.src = './assets/pacman.png'
 
     // Draw Pacman
@@ -272,26 +286,37 @@ const render = () => {
 
     // Draw Ghosts
     ghosts.map(ghost => {
-        ctx.drawImage(characters, ghost.ghostCropX, ghost.ghostCropY, ghost.sWidth, ghost.sHeight, ghost.x, ghost.y, ghost.dWidth, ghost.dHeight)
-        ghostMove(ghost)
-        collisionHandler(ghost)
+        ghostHandler(ctx, ghost, characters)
     })
+
     // Draw Eyes
     ctx.drawImage(characters, 380, 65, 32, 32, 627, 250, 50, 50)
-    console.log(scoreToBeat)
+
     // Next level
     if (score === scoreToBeat) {
         pills = []
         ghosts = []
         level += 1
-        levelSpan.innerHTML = level
-        score = 0
-        scoreToBeat = 0
-        player.x = playerX
-        player.y = playerX
-        createPillGrid(pillsObj)
-        drawPills(ctx, pills)
-        createGhostObjs()
+        if (level > 4) {
+            level = 0
+            info.style.display = 'none'
+            notificationHandler(ctx, notification, 'Victory! Press f5 to try again', 'green')
+        } else {
+            levelSpan.innerHTML = level
+            lives = 3
+            score = 0
+            scoreToBeat = 0
+            player.x = playerX
+            player.y = playerX
+            createPillGrid(pillsObj)
+            drawPills(ctx, pills)
+            createGhostObjs()
+        }
+
+    }
+
+    if (lives === 0) {
+        notificationHandler(ctx, notification, 'You lost! Press f5 to try again', 'red')
     }
 }
 
