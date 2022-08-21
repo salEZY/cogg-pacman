@@ -15,6 +15,7 @@ let playerY = 30
 let ghostCropY = 0
 let keyclick = {}
 let pills = []
+let superPillTimer = 10
 let ghosts = []
 const player = {
     x: playerX,
@@ -32,6 +33,8 @@ const notificationHandler = (ctx, elem, message, color) => {
     elem.innerHTML = message
 }
 
+const pillTimerHandler = setInterval(() => { superPillTimer-- }, 1000)
+
 const ghostHandler = (ctx, ghost, characters) => {
     ctx.drawImage(characters, ghost.ghostCropX, ghost.ghostCropY, ghost.sWidth, ghost.sHeight, ghost.x, ghost.y, ghost.dWidth, ghost.dHeight)
     ghostMove(ghost)
@@ -43,8 +46,6 @@ const collisionHandler = (player) => {
     if (player.x >= (canvas.width - 58)) {
         player.x = canvas.width - 58;
     }
-
-
     if (player.y >= (canvas.height - 58)) {
         // PORTAL
         player.y += player.speed;
@@ -114,7 +115,6 @@ const collisionHandler = (player) => {
 }
 
 const ghostMove = (ghost) => {
-
     const direction = Math.floor(Math.random() * 4) + 1
 
     if (direction === 1) ghost.y -= ghost.speed
@@ -235,6 +235,8 @@ const move = (keyclick) => {
             if (pill.superPill) {
                 score += 100
                 ghostCropY = 32
+                ghosts.map(ghost => ghost.eatable = true)
+                setInterval(pillTimerHandler, 1000)
             } else
                 score += 10
         }
@@ -243,23 +245,31 @@ const move = (keyclick) => {
     // Ghost collision
     ghosts.map(ghost => {
         if (player.x <= (ghost.x + 26) && ghost.x <= (player.x + 26) && player.y <= (ghost.y + 26) && ghost.y <= (player.y + 32)) {
-            lives -= 1
-            player.x = playerX;
-            player.y = playerY;
+            if (superPillTimer < 1) ghost.eatable = false
+            if (ghost.eatable) {
+                ghosts = ghosts.filter(ghosts => ghosts.x !== ghost.x)
+            } else {
+                lives -= 1
+                player.x = playerX;
+                player.y = playerY;
+            }
+
         }
     })
-
 
     // Open/closed mouth
     if (player.pacMouth == 320) {
         player.pacMouth = 352;
     } else { player.pacMouth = 320; }
-
-
-
 }
 
 const render = () => {
+    if (superPillTimer < 1) {
+        clearInterval(pillTimerHandler)
+        superPillTimer = 10
+        ghosts.forEach(ghost => ghost.eatable = false)
+    }
+
     scoreSpan.innerHTML = score
     livesSpan.innerHTML = lives
     levelSpan.innerHTML = level
@@ -275,8 +285,6 @@ const render = () => {
     drawNumbers(ctx, number0)
 
     drawPills(ctx, pills)
-
-
 
     characters = new Image()
     characters.src = './assets/pacman.png'
@@ -312,13 +320,14 @@ const render = () => {
             drawPills(ctx, pills)
             createGhostObjs()
         }
-
     }
 
     if (lives === 0) {
         notificationHandler(ctx, notification, 'You lost! Press f5 to try again', 'red')
     }
 }
+
+
 
 const playGame = () => {
     render()
